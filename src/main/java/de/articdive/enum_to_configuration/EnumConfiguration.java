@@ -42,6 +42,7 @@ public class EnumConfiguration {
     private static final Logger LOGGER = Logger.getLogger(EnumConfiguration.class.getName());
     private final File file;
     private final List<ConfigurationNode> configurationNodes;
+    private CommentedConfig commentedConfig;
     
     EnumConfiguration(File file, ConfigurationType type, List<ConfigurationNode> configurationNodes) {
         this.file = file;
@@ -106,7 +107,12 @@ public class EnumConfiguration {
                 }
             }
         }
-        newConfiguration.configFormat().createWriter().write(newConfiguration.checked(), file, WritingMode.REPLACE);
+        commentedConfig = newConfiguration;
+        save();
+    }
+    
+    private void save() {
+        commentedConfig.configFormat().createWriter().write(commentedConfig.checked(), file, WritingMode.REPLACE);
     }
     
     private String getOneCommentString(String[] comments) {
@@ -143,5 +149,22 @@ public class EnumConfiguration {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public Object get(ConfigurationNode node) {
+        return get(node.getPath());
+    }
+    
+    public Object get(String path) {
+        return commentedConfig.get(path);
+    }
+    
+    public void set(ConfigurationNode node, Object o) {
+        set(node.getPath(), o);
+    }
+    
+    public void set(String path, Object o) {
+        commentedConfig.set(path, o);
+        save();
     }
 }

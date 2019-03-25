@@ -26,6 +26,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
