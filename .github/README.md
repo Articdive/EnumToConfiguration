@@ -1,12 +1,12 @@
 
 A tool made for the Java programming language, it allows users to make configurations using only enums.   
 
-#What is EnumToConfiguration?
+# What is EnumToConfiguration?
 EnumToConfiguration is a library created by Articdive (Lukas Mansour).
 It's an open-source library that allows you to create configurations with Java's enums.
 The aim of EnumToConfiguration is to make configurations easy to use, easily accessible and useable with minimal code.
 
-#How can I use EnumToConfiguration?
+# How can I use EnumToConfiguration?
 EnumToConfiguration is primarily available to maven users.  
 To add it to your maven project use the following repository and dependency:
 ```
@@ -22,7 +22,7 @@ To add it to your maven project use the following repository and dependency:
     <scope>compile</scope>
 </dependency>
 ```
-#Usage in Java
+# Usage in Java
 EnumToConfiguration will require a file and an enum to work.  
 The enum must implement de.articdive.enum_to_configuration.ConfigurationNode.  
 The enum might look something like this:
@@ -82,7 +82,7 @@ enumConfiguration.set(ConfigEnum.MY_NODE, "newValue");
 # I have a question, issue, request, suggestion or similar.
 Please [open an issue here on GitHub](https://github.com/Articdive/EnumToConfiguration/issues/new).
 
-## I want to donate.
+# I want to donate.
 I highly appreciaite donations, especially when others make money by using my library.  
 I will not force you to donate nor will I treat you otherwise for not.  
 Please only donate if you are over the age of 18 or have permission from a legal guardian and use your own money.  
