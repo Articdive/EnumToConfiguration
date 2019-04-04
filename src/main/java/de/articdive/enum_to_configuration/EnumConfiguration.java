@@ -30,7 +30,9 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,13 +97,13 @@ public class EnumConfiguration {
             }
             if (oldConfiguration.get(configurationNode.getPath()) != null) {
                 if (oldConfiguration.get(configurationNode.getPath()) instanceof Config) {
-                    newConfiguration.set(configurationNode.getPath(), CommentedConfig.inMemory());
+                    newConfiguration.set(configurationNode.getPath(), CommentedConfig.wrap(new LinkedHashMap<>(), newConfiguration.configFormat()));
                 } else {
                     newConfiguration.set(configurationNode.getPath(), oldConfiguration.get(configurationNode.getPath()));
                 }
             } else {
                 if (configurationNode.getDefaultValue() instanceof ConfigurationSection) {
-                    newConfiguration.set(configurationNode.getPath(), CommentedConfig.inMemory());
+                    newConfiguration.set(configurationNode.getPath(), CommentedConfig.wrap(new LinkedHashMap<>(), newConfiguration.configFormat()));
                 } else {
                     newConfiguration.set(configurationNode.getPath(), configurationNode.getDefaultValue());
                 }
@@ -149,6 +151,10 @@ public class EnumConfiguration {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public <T extends Enum<T> & ConfigurationNode> void addConfigurationEnumeration(Class<T> enumClass) {
+        this.configurationNodes.addAll(new LinkedList<>(Arrays.asList(enumClass.getEnumConstants())));
     }
     
     public Object get(ConfigurationNode node) {
