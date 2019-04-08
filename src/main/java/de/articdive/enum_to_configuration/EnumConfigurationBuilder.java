@@ -27,11 +27,13 @@ import java.util.List;
  */
 public class EnumConfigurationBuilder {
     private ConfigurationType type = ConfigurationType.YAML;
-    private File file;
+    private File loadFile;
+    private File saveFile;
     private List<ConfigurationNode> configurationNodes;
     
     public <T extends Enum<T> & ConfigurationNode> EnumConfigurationBuilder(File file, Class<T> enumClass) {
-        this.file = file;
+        this.loadFile = file;
+        this.saveFile = file;
         this.configurationNodes = new LinkedList<>(Arrays.asList(enumClass.getEnumConstants()));
     }
     
@@ -45,12 +47,17 @@ public class EnumConfigurationBuilder {
         return this;
     }
     
-    public EnumConfigurationBuilder withFile(File file) {
-        this.file = file;
+    public EnumConfigurationBuilder withLoadFile(File file) {
+        this.loadFile = file;
+        return this;
+    }
+    
+    public EnumConfigurationBuilder withSaveFile(File file) {
+        this.saveFile = file;
         return this;
     }
     
     public EnumConfiguration build() {
-        return new EnumConfiguration(file, type, configurationNodes);
+        return new EnumConfiguration(loadFile, saveFile, type, configurationNodes);
     }
 }

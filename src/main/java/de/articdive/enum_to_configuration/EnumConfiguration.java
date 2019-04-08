@@ -42,18 +42,20 @@ import java.util.logging.Logger;
  */
 public class EnumConfiguration {
     private static final Logger LOGGER = Logger.getLogger(EnumConfiguration.class.getName());
-    private final File file;
+    private final File saveFile;
     private final List<ConfigurationNode> configurationNodes;
+    private final ConfigurationType type;
     private CommentedConfig commentedConfig;
     
-    EnumConfiguration(File file, ConfigurationType type, List<ConfigurationNode> configurationNodes) {
-        this.file = file;
+    EnumConfiguration(File loadFile, File saveFile, ConfigurationType type, List<ConfigurationNode> configurationNodes) {
+        this.saveFile = saveFile;
         this.configurationNodes = configurationNodes;
-        if (!isFileValid()) {
+        this.type = type;
+        if (isFileInvalid(loadFile) || isFileInvalid(saveFile)) {
             return;
         }
-        FileConfig oldConfiguration = FileConfig.of(file);
-        if (file.length() != 0) {
+        FileConfig oldConfiguration = FileConfig.of(loadFile);
+        if (loadFile.length() != 0) {
             oldConfiguration.load();
         }
         
@@ -89,10 +91,18 @@ public class EnumConfiguration {
             if (configurationNode.getComments().length > 0) {
                 if (configurationNode.getComments().length == 1) {
                     if (!configurationNode.getComments()[0].isEmpty()) {
-                        newConfiguration.setComment(configurationNode.getPath(), getOneCommentString(configurationNode.getComments()));
+                        if (type.equals(ConfigurationType.YAML)) {
+                            newConfiguration.setComment(configurationNode.getPath(), getOneCommentString(configurationNode.getComments()));
+                        } else {
+                            newConfiguration.setComment(configurationNode.getPath(), String.join("\n", configurationNode.getComments()));
+                        }
                     }
                 } else {
-                    newConfiguration.setComment(configurationNode.getPath(), getOneCommentString(configurationNode.getComments()));
+                    if (type.equals(ConfigurationType.YAML)) {
+                        newConfiguration.setComment(configurationNode.getPath(), getOneCommentString(configurationNode.getComments()));
+                    } else {
+                        newConfiguration.setComment(configurationNode.getPath(), String.join("\n", configurationNode.getComments()).replaceAll("#", ""));
+                    }
                 }
             }
             if (oldConfiguration.get(configurationNode.getPath()) != null) {
@@ -114,7 +124,7 @@ public class EnumConfiguration {
     }
     
     private void save() {
-        commentedConfig.configFormat().createWriter().write(commentedConfig.checked(), file, WritingMode.REPLACE);
+        commentedConfig.configFormat().createWriter().write(commentedConfig.checked(), saveFile, WritingMode.REPLACE);
     }
     
     private String getOneCommentString(String[] comments) {
@@ -135,21 +145,21 @@ public class EnumConfiguration {
         return commentString.toString();
     }
     
-    private boolean isFileValid() {
+    private boolean isFileInvalid(File file) {
         if (!file.getParentFile().mkdirs() && !file.getParentFile().isDirectory()) {
-            LOGGER.log(Level.SEVERE, "Parent folder was a file, not a directory.");
-            return false;
+            LOGGER.log(Level.SEVERE, "Parent folder was a File, not a directory.");
+            return true;
         }
         try {
             if (!file.exists() && !file.createNewFile()) {
                 LOGGER.log(Level.SEVERE, "File could not be created.");
-                return false;
+                return true;
             }
-            return true;
+            return false;
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "File could not be created.");
             e.printStackTrace();
-            return false;
+            return true;
         }
     }
     
