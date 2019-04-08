@@ -35,17 +35,17 @@ public class EnumConfigurationBuilder {
         this.configurationNodes = new LinkedList<>(Arrays.asList(enumClass.getEnumConstants()));
     }
     
-    public EnumConfigurationBuilder setType(ConfigurationType type) {
+    public EnumConfigurationBuilder withType(ConfigurationType type) {
         this.type = type;
         return this;
     }
     
-    public <T extends Enum<T> & ConfigurationNode> EnumConfigurationBuilder setConfigurationNodes(Class<T> enumClass) {
+    public <T extends Enum<T> & ConfigurationNode> EnumConfigurationBuilder withConfigurationNodes(Class<T> enumClass) {
         this.configurationNodes = new LinkedList<>(Arrays.asList(enumClass.getEnumConstants()));
         return this;
     }
     
-    public EnumConfigurationBuilder setFile(File file) {
+    public EnumConfigurationBuilder withFile(File file) {
         this.file = file;
         return this;
     }
