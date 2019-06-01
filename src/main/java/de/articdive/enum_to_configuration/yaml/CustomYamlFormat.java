@@ -27,7 +27,9 @@ import com.electronwill.nightconfig.yaml.YamlFormat;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * @author Lukas Mansour
@@ -62,6 +64,11 @@ public final class CustomYamlFormat implements ConfigFormat<CommentedConfig> {
     @Override
     public CommentedConfig createConcurrentConfig() {
         return CommentedConfig.ofConcurrent(this);
+    }
+    
+    @Override
+    public CommentedConfig createConfig(Supplier<Map<String, Object>> mapCreator) {
+        return CommentedConfig.of(mapCreator, this);
     }
     
     @Override
